@@ -4,20 +4,17 @@
   "description": "Remote app for Module Federation",
   "private": true,
   "scripts": {
-    "dev": "NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3001",
+    "dev": "rm -rf .next && NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3001",
     "build": "NEXT_PRIVATE_LOCAL_WEBPACK=true next build",
     "start": "next start -p 3001",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^14.0.0",
+    "@module-federation/nextjs-mf": "8.8.34",
+    "lodash": "4.17.21",
+    "next": "^14.1.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@module-federation/nextjs-mf": "^8.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-next": "^14.0.0",
-    "webpack": "^5.0.0"
+    "react-dom": "^18.2.0",
+    "webpack": "5.101.0"
   }
 }

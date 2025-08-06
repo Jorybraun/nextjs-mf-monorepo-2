@@ -1,61 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense  } from 'react';
+import dynamic from 'next/dynamic';
 
-// Define a wrapper for the remote component
-const RemoteWrapper = () => {
-  const [RemoteComponent, setRemoteComponent] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const loadRemoteComponent = async () => {
-      try {
-        // Import the remote component
-        const remote = await import('remote/RemoteButton');
-        setRemoteComponent(() => remote.default);
-        setLoading(false);
-      } catch (err) {
-        console.error('Failed to load remote component:', err);
-        setError(err);
-        setLoading(false);
-      }
-    };
-
-    loadRemoteComponent();
-  }, []);
-
-  if (loading) {
-    return (
-      <div style={{ 
-        padding: '12px 24px', 
-        backgroundColor: '#f9f9f9', 
-        borderRadius: '6px',
-        color: '#666',
-        textAlign: 'center'
-      }}>
-        Loading remote component...
-      </div>
-    );
-  }
-
-  if (error || !RemoteComponent) {
-    return (
-      <div style={{ 
-        padding: '12px 24px', 
-        backgroundColor: '#f0f0f0', 
-        border: '2px dashed #ccc',
-        borderRadius: '6px',
-        color: '#666',
-        textAlign: 'center'
-      }}>
-        Remote component unavailable
-        <br />
-        <small>Make sure remote-app is running on port 3001</small>
-      </div>
-    );
-  }
-
-  return <RemoteComponent />;
-};
+const RemoteComponent = lazy(() => import('remote/button'))
 
 export default function Home() {
   useEffect(() => {
@@ -119,7 +65,9 @@ export default function Home() {
         <h2 style={{ color: '#555', marginBottom: '1rem', fontSize: '1.2rem' }}>
           Remote Component (from remote-app):
         </h2>
-        <RemoteWrapper />
+        <Suspense fallback={'loading remote title'}>
+          <RemoteComponent />
+        </Suspense>
       </div>
 
       <div style={{ 

@@ -1,35 +1,26 @@
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+// this enables you to use import() and the webpack parser
+// loading remotes on demand, not ideal for SSR
+
+module.exports = {
   webpack(config, options) {
-    const { isServer } = options;
-    
-    // Only enable Module Federation on client side to avoid SSR issues
-    if (!isServer) {
-      config.plugins.push(
-        new NextFederationPlugin({
-          name: 'remote',
-          filename: 'static/chunks/remoteEntry.js',
-          exposes: {
-            './RemoteButton': './components/RemoteButton.js',
-          },
-          shared: {
-            react: {
-              singleton: true,
-              requiredVersion: false,
-            },
-            'react-dom': {
-              singleton: true,
-              requiredVersion: false,
-            },
-          },
-        })
-      );
-    }
+    config.plugins.push(
+      new NextFederationPlugin({
+        name: 'remote',
+        filename: 'static/chunks/remoteEntry.js',
+        dts: false,
+        exposes: {
+          './button': './components/RemoteButton.js',
+        },
+        shared: {},
+        extraOptions: {
+          exposePages: true,
+        },
+      }),
+    );
 
     return config;
   },
 };
-
-module.exports = nextConfig;
