@@ -13,6 +13,7 @@ module.exports = {
         dts: false,
         exposes: {
           './button': './components/RemoteButton.js',
+          './products': './pages/products.js',
         },
         shared: {},
         extraOptions: {
