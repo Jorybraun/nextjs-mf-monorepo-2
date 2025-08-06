@@ -1,0 +1,31 @@
+{
+  "name": "nextjs-mf-monorepo",
+  "version": "1.0.0",
+  "description": "Next.js Module Federation monorepo with Segment analytics",
+  "private": true,
+  "workspaces": [
+    "host-app",
+    "remote-app"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "start": "npm run start --workspaces",
+    "dev:host": "npm run dev --workspace=host-app",
+    "dev:remote": "npm run dev --workspace=remote-app",
+    "build:host": "npm run build --workspace=host-app",
+    "build:remote": "npm run build --workspace=remote-app"
+  },
+  "keywords": [
+    "nextjs",
+    "module-federation",
+    "monorepo",
+    "segment",
+    "analytics"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^5.101.0"
+  }
+}
