@@ -27,6 +27,35 @@ const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
       });
       console.log('Analytics tracked: Product Detail page view', product.name);
     }
+
+    // TODO: Adobe Analytics Product Detail View
+    // Implement Adobe Analytics product detail tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.s && product) {
+    //   window.s.pageName = `Product Detail - ${product.name}`;
+    //   window.s.events = "prodView";
+    //   window.s.products = `${product.category};${product.name};1;${product.price}`;
+    //   window.s.eVar2 = product.id;
+    //   window.s.eVar3 = product.category;
+    //   window.s.t();
+    // }
+
+    // TODO: GA4 Product Detail View
+    // Implement GA4 view_item event here
+    // Example:
+    // if (typeof window !== 'undefined' && window.gtag && product) {
+    //   window.gtag('event', 'view_item', {
+    //     currency: 'USD',
+    //     value: product.price,
+    //     items: [{
+    //       item_id: product.id,
+    //       item_name: product.name,
+    //       item_category: product.category,
+    //       price: product.price,
+    //       quantity: 1
+    //     }]
+    //   });
+    // }
   }, [product]);
 
   const fetchProduct = async (id) => {
@@ -67,6 +96,33 @@ const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
         quantity
       });
     }
+
+    // TODO: Adobe Analytics Add to Cart
+    // Implement Adobe Analytics add to cart tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.s) {
+    //   window.s.events = "scAdd";
+    //   window.s.products = `${product.category};${product.name};${quantity};${product.price * quantity}`;
+    //   window.s.eVar4 = "add-to-cart";
+    //   window.s.t();
+    // }
+
+    // TODO: GA4 Add to Cart
+    // Implement GA4 add_to_cart event here
+    // Example:
+    // if (typeof window !== 'undefined' && window.gtag) {
+    //   window.gtag('event', 'add_to_cart', {
+    //     currency: 'USD', 
+    //     value: product.price * quantity,
+    //     items: [{
+    //       item_id: product.id,
+    //       item_name: product.name,
+    //       item_category: product.category,
+    //       price: product.price,
+    //       quantity: quantity
+    //     }]
+    //   });
+    // }
 
     // Call parent callback
     if (onAddToCart) {

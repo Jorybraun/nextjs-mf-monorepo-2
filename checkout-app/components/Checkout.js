@@ -87,6 +87,36 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
           });
           console.log('Analytics tracked: Checkout Step 1 Completed');
         }
+
+        // TODO: Adobe Analytics Checkout Step
+        // Implement Adobe Analytics checkout step tracking here
+        // Example:
+        // if (typeof window !== 'undefined' && window.s) {
+        //   window.s.events = "scCheckout";
+        //   window.s.eVar10 = "step-1-completed";
+        //   window.s.eVar11 = "customer-information";
+        //   window.s.products = cartItems.map(item => 
+        //     `${item.category || 'Unknown'};${item.name};${item.quantity};${item.price * item.quantity}`
+        //   ).join(",");
+        //   window.s.t();
+        // }
+
+        // TODO: GA4 Checkout Step
+        // Implement GA4 checkout progress event here
+        // Example:
+        // if (typeof window !== 'undefined' && window.gtag) {
+        //   window.gtag('event', 'add_shipping_info', {
+        //     currency: 'USD',
+        //     value: totalPrice,
+        //     items: cartItems.map(item => ({
+        //       item_id: item.id,
+        //       item_name: item.name,
+        //       item_category: item.category || 'Unknown',
+        //       price: item.price,
+        //       quantity: item.quantity
+        //     }))
+        //   });
+        // }
       }
     }
   };
@@ -125,6 +155,38 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
           items: cartItems.length
         });
       }
+
+      // TODO: Adobe Analytics Purchase Event
+      // Implement Adobe Analytics purchase tracking here
+      // Example:
+      // if (typeof window !== 'undefined' && window.s) {
+      //   window.s.events = "purchase";
+      //   window.s.purchaseID = orderId;
+      //   window.s.products = cartItems.map(item => 
+      //     `${item.category || 'Unknown'};${item.name};${item.quantity};${item.price * item.quantity}`
+      //   ).join(",");
+      //   window.s.eVar5 = customerInfo.paymentMethod;
+      //   window.s.eVar6 = (totalPrice * 1.08).toFixed(2);
+      //   window.s.t();
+      // }
+
+      // TODO: GA4 Purchase Event
+      // Implement GA4 purchase event here
+      // Example:
+      // if (typeof window !== 'undefined' && window.gtag) {
+      //   window.gtag('event', 'purchase', {
+      //     transaction_id: orderId,
+      //     currency: 'USD',
+      //     value: totalPrice * 1.08,
+      //     items: cartItems.map(item => ({
+      //       item_id: item.id,
+      //       item_name: item.name,
+      //       item_category: item.category || 'Unknown',
+      //       price: item.price,
+      //       quantity: item.quantity
+      //     }))
+      //   });
+      // }
       
       setStep(3);
       
