@@ -20,6 +20,32 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
         value: totalPrice
       });
     }
+
+    // TODO: Adobe Analytics Cart Page View
+    // Implement Adobe Analytics cart page tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.s) {
+    //   window.s.pageName = "Shopping Cart";
+    //   window.s.channel = "ecommerce";
+    //   window.s.events = "scView";
+    //   window.s.eVar7 = totalItems.toString();
+    //   window.s.eVar8 = totalPrice.toFixed(2);
+    //   window.s.t();
+    // }
+
+    // TODO: GA4 Cart Page View  
+    // Implement GA4 page view with cart context here
+    // Example:
+    // if (typeof window !== 'undefined' && window.gtag) {
+    //   window.gtag('event', 'page_view', {
+    //     page_title: 'Shopping Cart',
+    //     page_location: window.location.href,
+    //     content_group1: 'ecommerce',
+    //     value: totalPrice,
+    //     currency: 'USD',
+    //     items_count: totalItems
+    //   });
+    // }
   }, [totalItems, totalPrice]);
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -52,6 +78,35 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
         value: totalPrice
       });
     }
+
+    // TODO: Adobe Analytics Checkout Initiation
+    // Implement Adobe Analytics checkout start tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.s) {
+    //   window.s.events = "scCheckout";
+    //   window.s.products = items.map(item => 
+    //     `${item.category || 'Unknown'};${item.name};${item.quantity};${item.price * item.quantity}`
+    //   ).join(",");
+    //   window.s.eVar9 = "checkout-initiated";
+    //   window.s.t();
+    // }
+
+    // TODO: GA4 Checkout Initiation
+    // Implement GA4 begin_checkout event here
+    // Example:
+    // if (typeof window !== 'undefined' && window.gtag) {
+    //   window.gtag('event', 'begin_checkout', {
+    //     currency: 'USD',
+    //     value: totalPrice,
+    //     items: items.map(item => ({
+    //       item_id: item.id,
+    //       item_name: item.name,
+    //       item_category: item.category || 'Unknown',
+    //       price: item.price,
+    //       quantity: item.quantity
+    //     }))
+    //   });
+    // }
 
     if (onNavigateToCheckout) {
       onNavigateToCheckout();

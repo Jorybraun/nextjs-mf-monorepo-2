@@ -7,7 +7,372 @@ This document contains hands-on exercises to practice integrating analytics into
 Before starting these exercises, ensure you have:
 1. All microfrontends running locally (see README for setup instructions)
 2. Browser developer console open to view analytics events
-3. Basic understanding of Segment analytics or similar analytics platforms
+3. Basic understanding of analytics platforms (Segment, Adobe Analytics, Google Analytics)
+
+---
+
+# Interview-Style Practice Scenarios
+
+## Adobe Analytics Implementation Scenario
+
+**Scenario**: You are tasked with implementing Adobe Analytics tracking for a complete ecommerce user journey. A customer visits the product catalog, views a specific product, adds it to their cart, and completes the checkout process.
+
+### Your Task: Implement Adobe Analytics Event Tracking
+
+**User Journey to Track:**
+1. **Product List Page View** - User browses the product catalog
+2. **Product Detail View** - User clicks on a specific product 
+3. **Add to Cart** - User adds the product to their shopping cart
+4. **Purchase** - User completes the checkout process
+
+### Implementation Requirements:
+
+#### 1. Product List Page View (ProductList.js)
+**Location**: `/product-list-app/components/ProductList.js`
+**Events to implement:**
+```javascript
+// Adobe Analytics page view
+s.pageName = "Product List";
+s.channel = "ecommerce";
+s.prop1 = "product-catalog";
+s.eVar1 = filterValue; // current filter applied
+s.t(); // Send page view
+
+// Product impressions 
+s.events = "prodView";
+s.products = "Electronics;Wireless Headphones;1;99.99";
+s.t();
+```
+
+**Hint**: Look for the `useEffect` hook that currently tracks Segment analytics. Replace or add Adobe Analytics calls.
+
+#### 2. Product Detail View (ProductDetail.js)  
+**Location**: `/product-detail-app/components/ProductDetail.js`
+**Events to implement:**
+```javascript
+// Product detail view
+s.pageName = `Product Detail - ${product.name}`;
+s.events = "prodView";
+s.products = `${product.category};${product.name};1;${product.price}`;
+s.eVar2 = product.id;
+s.eVar3 = product.category;
+s.t();
+```
+
+**Hint**: Check the `useEffect` that fires when product data loads.
+
+#### 3. Add to Cart (ProductDetail.js)
+**Location**: `/product-detail-app/components/ProductDetail.js` in `handleAddToCart` function
+**Events to implement:**
+```javascript
+// Add to cart event
+s.events = "scAdd";
+s.products = `${product.category};${product.name};${quantity};${product.price * quantity}`;
+s.eVar4 = "add-to-cart";
+s.t();
+```
+
+**Hint**: Find the `handleAddToCart` function that currently has Segment tracking.
+
+#### 4. Purchase Event (Checkout.js)
+**Location**: `/checkout-app/components/Checkout.js` in `handlePlaceOrder` function  
+**Events to implement:**
+```javascript
+// Purchase completion
+s.events = "purchase";
+s.purchaseID = orderId;
+s.products = cartItems.map(item => 
+  `${item.category};${item.name};${item.quantity};${item.price * item.quantity}`
+).join(",");
+s.eVar5 = customerInfo.paymentMethod;
+s.eVar6 = totalPrice;
+s.t();
+```
+
+**Hint**: Look for the order completion logic in the `handlePlaceOrder` async function.
+
+### Testing Your Implementation:
+- Use browser developer tools Network tab
+- Look for calls to Adobe Analytics collection servers
+- Verify s.products string format is correct
+- Check that eVars and props contain expected values
+
+---
+
+## Google Analytics (GA4) Conversion Scenario
+
+**Scenario**: The company wants to migrate from Adobe Analytics to Google Analytics 4 (GA4). Convert the Adobe Analytics implementation above to use GA4 events and best practices.
+
+### Your Task: Convert Adobe Analytics to GA4
+
+**Key Differences to Address:**
+- GA4 uses event-based tracking vs page/prop based
+- Different parameter naming conventions  
+- Enhanced ecommerce events have specific formats
+- dataLayer structure for Google Tag Manager
+
+### GA4 Implementation Requirements:
+
+#### 1. Product List Page View
+**Convert from Adobe Analytics to GA4:**
+```javascript
+// Instead of Adobe Analytics s.t()
+gtag('event', 'page_view', {
+  page_title: 'Product List',
+  page_location: window.location.href,
+  content_group1: 'ecommerce',
+  custom_parameter_filter: filterValue
+});
+
+// Product impressions for GA4
+gtag('event', 'view_item_list', {
+  item_list_id: 'product_catalog',
+  item_list_name: 'Product Catalog',
+  items: filteredProducts.map(product => ({
+    item_id: product.id,
+    item_name: product.name,
+    item_category: product.category,
+    price: product.price,
+    index: products.indexOf(product)
+  }))
+});
+```
+
+#### 2. Product Detail View  
+**Convert Adobe s.products to GA4 items:**
+```javascript
+gtag('event', 'view_item', {
+  currency: 'USD',
+  value: product.price,
+  items: [{
+    item_id: product.id,
+    item_name: product.name,
+    item_category: product.category,
+    price: product.price,
+    quantity: 1
+  }]
+});
+```
+
+#### 3. Add to Cart Event
+**Convert Adobe scAdd to GA4:**
+```javascript
+gtag('event', 'add_to_cart', {
+  currency: 'USD', 
+  value: product.price * quantity,
+  items: [{
+    item_id: product.id,
+    item_name: product.name,
+    item_category: product.category,
+    price: product.price,
+    quantity: quantity
+  }]
+});
+```
+
+#### 4. Purchase Event
+**Convert Adobe purchase to GA4:**
+```javascript
+gtag('event', 'purchase', {
+  transaction_id: orderId,
+  currency: 'USD',
+  value: totalPrice,
+  items: cartItems.map(item => ({
+    item_id: item.id,
+    item_name: item.name,
+    item_category: item.category || 'Unknown',
+    price: item.price,
+    quantity: item.quantity
+  }))
+});
+```
+
+### Additional GA4 Best Practices:
+
+1. **dataLayer Implementation** (Alternative to gtag):
+```javascript
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: 'add_to_cart',
+  ecommerce: {
+    currency: 'USD',
+    value: product.price * quantity,
+    items: [/* item details */]
+  }
+});
+```
+
+2. **Enhanced Ecommerce Events** to also implement:
+- `begin_checkout` (when user starts checkout)
+- `add_payment_info` (when payment method selected)  
+- `add_shipping_info` (when shipping info added)
+
+3. **Custom Parameters** for business needs:
+```javascript
+gtag('config', 'GA_MEASUREMENT_ID', {
+  custom_map: {
+    'custom_parameter_1': 'user_type',
+    'custom_parameter_2': 'product_source'
+  }
+});
+```
+
+### Migration Testing Checklist:
+- [ ] All Adobe Analytics events have GA4 equivalents
+- [ ] Enhanced ecommerce data structure is correct
+- [ ] Custom dimensions map to GA4 custom parameters
+- [ ] Revenue and conversion tracking works
+- [ ] Real-time reporting shows events in GA4 interface
+
+---
+
+## General Testing & Verification Guidelines
+
+### Testing Analytics Implementation Without Real Credentials
+
+**Important**: You can test analytics implementations without real Adobe Analytics or GA4 accounts by using these methods:
+
+#### 1. Browser Console Testing
+```javascript
+// Override analytics functions to log instead of sending
+window.s = {
+  t: function() { console.log('Adobe Analytics call:', this); },
+  tl: function() { console.log('Adobe Analytics link call:', this); }
+};
+
+window.gtag = function(command, eventName, parameters) {
+  console.log('GA4 Event:', { command, eventName, parameters });
+};
+```
+
+#### 2. Network Tab Verification
+- **Adobe Analytics**: Look for calls to `*.omtrdc.net` or `*.sc.omtrdc.net`
+- **GA4**: Look for calls to `www.google-analytics.com/g/collect`
+- **Segment**: Look for calls to `api.segment.io/v1/track`
+
+**What to Verify:**
+- Correct event names and parameters
+- Proper product data formatting
+- Revenue values are accurate  
+- Custom dimensions/parameters populated
+
+#### 3. Debug Extensions & Tools
+
+**For Adobe Analytics:**
+- Adobe Experience Cloud Debugger (Chrome/Firefox extension)
+- Adobe Analytics Debugger bookmarklet
+- Browser console: `s.debugTracking = true;`
+
+**For GA4:**
+- Google Analytics Debugger (Chrome extension) 
+- GA4 DebugView in Google Analytics interface
+- Browser console: Enable debug mode with `gtag('config', 'GA_MEASUREMENT_ID', { debug_mode: true });`
+
+**For General Testing:**
+- Charles Proxy or Fiddler for network inspection
+- Postman for testing analytics API endpoints
+
+#### 4. Mock Analytics Setup for Development
+
+Create a mock analytics utility for safe testing:
+
+```javascript
+// utils/mockAnalytics.js
+const MockAnalytics = {
+  isDebugMode: process.env.NODE_ENV === 'development',
+  
+  // Adobe Analytics mock
+  s: {
+    t: function() {
+      if (MockAnalytics.isDebugMode) {
+        console.log('🔍 Adobe Analytics Page View:', {
+          pageName: this.pageName,
+          channel: this.channel,
+          events: this.events,
+          products: this.products,
+          props: Object.keys(this).filter(k => k.startsWith('prop')),
+          eVars: Object.keys(this).filter(k => k.startsWith('eVar'))
+        });
+      }
+    },
+    tl: function(element, linkType, linkName) {
+      if (MockAnalytics.isDebugMode) {
+        console.log('🔍 Adobe Analytics Link Track:', { linkType, linkName, products: this.products });
+      }
+    }
+  },
+  
+  // GA4 mock
+  gtag: function(command, eventName, parameters) {
+    if (MockAnalytics.isDebugMode) {
+      console.log('🔍 GA4 Event:', { command, eventName, parameters });
+    }
+  },
+  
+  // Enhanced logging for ecommerce events
+  logEcommerceEvent: function(platform, eventType, data) {
+    if (MockAnalytics.isDebugMode) {
+      console.group(`🛒 ${platform} - ${eventType}`);
+      console.log('Event Data:', data);
+      console.log('Revenue:', data.value || data.revenue || 'N/A');
+      console.log('Items:', data.items || data.products || 'N/A');
+      console.groupEnd();
+    }
+  }
+};
+
+export default MockAnalytics;
+```
+
+#### 5. Testing Checklist
+
+**Before Implementation:**
+- [ ] Understand the user journey to track
+- [ ] Define the events and parameters needed
+- [ ] Plan where in the code to place tracking calls
+- [ ] Set up mock/debug environment
+
+**During Implementation:**
+- [ ] Test each event individually
+- [ ] Verify parameters are populated correctly
+- [ ] Check events fire at the right time
+- [ ] Test error handling (what if analytics fails?)
+
+**After Implementation:**
+- [ ] Test complete user journey end-to-end
+- [ ] Verify data appears correctly in browser console
+- [ ] Check network requests have correct payloads
+- [ ] Test edge cases (empty cart, failed checkout, etc.)
+- [ ] Validate across different browsers
+
+**Production Readiness:**
+- [ ] Replace mock implementations with real analytics
+- [ ] Test with real analytics account in staging
+- [ ] Verify privacy compliance (GDPR, CCPA)
+- [ ] Set up monitoring/alerts for analytics failures
+- [ ] Document the implementation for future team members
+
+#### 6. Common Issues & Debugging
+
+**Data Not Appearing:**
+- Check if analytics library is loaded (`window.s`, `window.gtag`, `window.analytics`)
+- Verify network requests are being made
+- Check for JavaScript errors in console
+- Ensure async timing doesn't affect tracking
+
+**Incorrect Data:**
+- Log variables before sending to analytics
+- Check data types (strings vs numbers)
+- Verify currency formatting
+- Test product array/object structure
+
+**Performance Issues:**
+- Use async analytics calls when possible
+- Batch events when appropriate
+- Don't block user interactions for analytics
+- Consider using web workers for heavy analytics processing
+
+---
 
 ## Exercise 1: Product Discovery Analytics
 

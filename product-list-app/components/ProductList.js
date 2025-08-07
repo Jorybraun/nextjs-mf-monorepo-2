@@ -18,6 +18,27 @@ const ProductList = ({ onNavigateToProduct }) => {
       console.log('Analytics tracked: Product List page view');
     }
 
+    // TODO: Adobe Analytics Implementation
+    // Implement Adobe Analytics page view tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.s) {
+    //   window.s.pageName = "Product List";
+    //   window.s.channel = "ecommerce";
+    //   window.s.prop1 = "product-catalog";
+    //   window.s.t();
+    // }
+
+    // TODO: GA4 Implementation  
+    // Implement Google Analytics 4 page view tracking here
+    // Example:
+    // if (typeof window !== 'undefined' && window.gtag) {
+    //   window.gtag('event', 'page_view', {
+    //     page_title: 'Product List',
+    //     page_location: window.location.href,
+    //     content_group1: 'ecommerce'
+    //   });
+    // }
+
     fetchProducts();
   }, []);
 
