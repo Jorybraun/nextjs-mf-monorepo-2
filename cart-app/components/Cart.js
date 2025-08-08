@@ -5,21 +5,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
   const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
 
   useEffect(() => {
-    // Analytics: Track cart page view
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.page('Shopping Cart', {
-        title: 'Shopping Cart',
-        path: '/cart',
-        items_count: totalItems,
-        cart_value: totalPrice,
-        currency: 'USD',
-        app: 'cart-app',
-      });
-      console.log('Analytics tracked: Cart page view', {
-        items: totalItems,
-        value: totalPrice
-      });
-    }
+    // Cart page view - analytics removed
   }, [totalItems, totalPrice]);
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -31,28 +17,6 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
   };
 
   const handleProceedToCheckout = () => {
-    // Analytics: Track checkout initiated
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Checkout Started', {
-        order_id: `order_${Date.now()}`,
-        value: totalPrice,
-        currency: 'USD',
-        items_count: totalItems,
-        products: items.map(item => ({
-          product_id: item.id,
-          product_name: item.name,
-          product_price: item.price,
-          quantity: item.quantity
-        })),
-        app: 'cart-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Checkout Started', {
-        items: totalItems,
-        value: totalPrice
-      });
-    }
-
     if (onNavigateToCheckout) {
       onNavigateToCheckout();
     } else {

@@ -1,4 +1,3 @@
-// module federation remote app
 import React, { Suspense } from 'react';
 
 const RemoteProductsPage = React.lazy(() => import('productList/productsPage'));

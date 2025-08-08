@@ -20,23 +20,7 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    // Analytics: Track checkout page view
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.page('Checkout', {
-        title: 'Checkout',
-        path: '/checkout',
-        step: step,
-        items_count: cartItems.length,
-        checkout_value: totalPrice,
-        currency: 'USD',
-        app: 'checkout-app',
-      });
-      console.log('Analytics tracked: Checkout page view', {
-        step,
-        items: cartItems.length,
-        value: totalPrice
-      });
-    }
+    // Checkout page tracking - analytics removed
   }, [step, cartItems.length, totalPrice]);
 
   const handleInputChange = (field, value) => {
@@ -74,19 +58,6 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
     if (step === 1) {
       if (validateStep1()) {
         setStep(2);
-        // Analytics: Track checkout progress
-        if (typeof window !== 'undefined' && window.analytics) {
-          window.analytics.track('Checkout Step Completed', {
-            step: 1,
-            step_name: 'Customer Information',
-            items_count: cartItems.length,
-            checkout_value: totalPrice,
-            currency: 'USD',
-            app: 'checkout-app',
-            timestamp: new Date().toISOString(),
-          });
-          console.log('Analytics tracked: Checkout Step 1 Completed');
-        }
       }
     }
   };
@@ -98,34 +69,7 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
       // Simulate order processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const orderId = `ORD-${Date.now()}`;
-      
-      // Analytics: Track purchase completion
-      if (typeof window !== 'undefined' && window.analytics) {
-        window.analytics.track('Order Completed', {
-          order_id: orderId,
-          revenue: totalPrice * 1.08, // Including tax
-          currency: 'USD',
-          items_count: cartItems.length,
-          products: cartItems.map(item => ({
-            product_id: item.id,
-            product_name: item.name,
-            product_category: item.category || 'Unknown',
-            product_price: item.price,
-            quantity: item.quantity
-          })),
-          customer_email: customerInfo.email,
-          payment_method: customerInfo.paymentMethod,
-          app: 'checkout-app',
-          timestamp: new Date().toISOString(),
-        });
-        console.log('Analytics tracked: Order Completed', {
-          orderId,
-          revenue: totalPrice * 1.08,
-          items: cartItems.length
-        });
-      }
-      
+      const orderId = `ORD-${Date.now()}`;      
       setStep(3);
       
       if (onOrderComplete) {

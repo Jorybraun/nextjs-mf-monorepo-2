@@ -2,18 +2,6 @@ import React from 'react';
 
 const RemoteButton = () => {
   const handleClick = () => {
-    // Track analytics event when button is clicked
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Remote Button Clicked', {
-        component: 'RemoteButton',
-        location: 'remote-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Remote Button Clicked');
-    } else {
-      console.warn('Segment analytics not available');
-    }
-    
     alert('Hello from Remote Button!');
   };
 

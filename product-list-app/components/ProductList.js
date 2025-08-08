@@ -6,6 +6,7 @@ const ProductList = ({ onNavigateToProduct, products = [] }) => {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
 
+
   useEffect(() => {
     // Analytics: Track page view
     if (typeof window !== 'undefined' && window.analytics) {
@@ -146,13 +147,9 @@ const ProductList = ({ onNavigateToProduct, products = [] }) => {
         color: '#666',
         textAlign: 'center'
       }}>
-        <strong>Module Federation Info:</strong>
-        <br />
-        • Product List App (port 3002)
+        • Module Federation Info: Product List App (port 3002)
         <br />
         • Exposes: ProductList and ProductCard components
-        <br />
-        • Analytics: Product views and page loads tracked
       </div>
     </div>
   );
