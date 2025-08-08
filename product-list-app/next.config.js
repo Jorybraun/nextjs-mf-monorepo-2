@@ -12,6 +12,7 @@ module.exports = {
         exposes: {
           './ProductList': './components/ProductList.js',
           './ProductCard': './components/ProductCard.js',
+          './products': './pages/index.js',
         },
         shared: {},
         extraOptions: {
