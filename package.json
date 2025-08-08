@@ -26,7 +26,8 @@
     "build:product-list": "npm run build --workspace=product-list-app",
     "build:product-detail": "npm run build --workspace=product-detail-app",
     "build:cart": "npm run build --workspace=cart-app",
-    "build:checkout": "npm run build --workspace=checkout-app"
+    "build:checkout": "npm run build --workspace=checkout-app",
+    "dev:all": "concurrently \"npm run dev:host\" \"npm run dev:remote\" \"npm run dev:product-list\" \"npm run dev:product-detail\" \"npm run dev:cart\" \"npm run dev:checkout\""
   },
   "keywords": [
     "nextjs",
