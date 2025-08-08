@@ -12,7 +12,7 @@ module.exports = {
         exposes: {
           './Cart': './components/Cart.js',
           './CartProvider': './contexts/CartContext.js',
-          './cart': './pages/index.js',
+          './cartPage': './pages/index.js',
         },
         shared: {},
         extraOptions: {

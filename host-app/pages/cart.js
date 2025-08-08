@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-const RemoteCartPage = React.lazy(() => import('cart/cart'));
+const RemoteCartPage = React.lazy(() => import('cart/cartPage'));
 
 export default function Cart() {
   return (

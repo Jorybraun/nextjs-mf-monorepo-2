@@ -4,8 +4,8 @@ import Cart from '../components/Cart';
 
 export default function Home({ cartItems, totalPrice }) {
   return (
-    <CartProvider>
-      <Cart cartItems={cartItems} totalPrice={totalPrice} />
+    <CartProvider initialItems={cartItems}>
+      <Cart />
     </CartProvider>
   );
 }

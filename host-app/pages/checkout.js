@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-const RemoteCheckoutPage = React.lazy(() => import('checkout/checkout'));
+const RemoteCheckoutPage = React.lazy(() => import('checkout/checkoutPage'));
 
 export default function Checkout() {
   return (
