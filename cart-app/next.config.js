@@ -10,6 +10,7 @@ module.exports = {
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
+          './cart': './pages/cart.js',
           './Cart': './components/Cart.js',
           './CartProvider': './contexts/CartContext.js',
         },

@@ -10,6 +10,7 @@ module.exports = {
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
+          './checkout': './pages/checkout.js',
           './Checkout': './components/Checkout.js',
         },
         shared: {},
