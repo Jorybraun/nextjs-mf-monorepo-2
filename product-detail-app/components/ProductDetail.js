@@ -13,26 +13,12 @@ const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
     }
   }, [productId]);
 
-  useEffect(() => {
-    // Analytics: Track page view
-    if (typeof window !== 'undefined' && window.analytics && product) {
-      window.analytics.page('Product Detail', {
-        title: `Product Detail - ${product.name}`,
-        path: `/product/${product.id}`,
-        product_id: product.id,
-        product_name: product.name,
-        product_category: product.category,
-        product_price: product.price,
-        app: 'product-detail-app',
-      });
-      console.log('Analytics tracked: Product Detail page view', product.name);
-    }
-  }, [product]);
-
   const fetchProduct = async (id) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/products/${id}`);
+      // Use environment variable for API URL or fallback to localhost
+      const apiUrl = process.env.NEXT_PUBLIC_PRODUCT_DETAIL_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${apiUrl}/api/products/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch product');
       }
@@ -48,25 +34,6 @@ const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
 
   const handleAddToCart = () => {
     if (!product) return;
-
-    // Analytics: Track add to cart
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Product Added', {
-        product_id: product.id,
-        product_name: product.name,
-        product_category: product.category,
-        product_price: product.price,
-        quantity: quantity,
-        currency: 'USD',
-        value: product.price * quantity,
-        app: 'product-detail-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Product Added to Cart', {
-        product: product.name,
-        quantity
-      });
-    }
 
     // Call parent callback
     if (onAddToCart) {

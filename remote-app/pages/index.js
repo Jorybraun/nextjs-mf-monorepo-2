@@ -3,15 +3,7 @@ import RemoteButton from '../components/RemoteButton';
 
 export default function Home() {
   useEffect(() => {
-    // Track page view when component mounts
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.page('Remote App Home', {
-        title: 'Remote App Home Page',
-        path: '/',
-        app: 'remote-app',
-      });
-      console.log('Analytics tracked: Remote App Home page view');
-    }
+    // Page view tracking - analytics removed
   }, []);
 
   return (
@@ -21,7 +13,7 @@ export default function Home() {
       </h1>
       <p style={{ color: '#666', marginBottom: '2rem', lineHeight: '1.5' }}>
         This is the remote application that exposes the RemoteButton component 
-        through Module Federation. The button below includes Segment analytics tracking.
+        through Module Federation.
       </p>
       
       <div style={{ marginBottom: '2rem' }}>

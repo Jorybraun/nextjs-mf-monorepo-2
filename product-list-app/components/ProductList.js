@@ -8,22 +8,14 @@ const ProductList = ({ onNavigateToProduct }) => {
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    // Analytics: Track page view
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.page('Product List', {
-        title: 'Product List Page',
-        path: '/products',
-        app: 'product-list-app',
-      });
-      console.log('Analytics tracked: Product List page view');
-    }
-
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      // Use environment variable for API URL or fallback to localhost
+      const apiUrl = process.env.NEXT_PUBLIC_PRODUCT_LIST_API_URL || 'http://localhost:3002';
+      const response = await fetch(`${apiUrl}/api/products`);
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
@@ -165,13 +157,9 @@ const ProductList = ({ onNavigateToProduct }) => {
         color: '#666',
         textAlign: 'center'
       }}>
-        <strong>Module Federation Info:</strong>
-        <br />
-        • Product List App (port 3002)
+        • Module Federation Info: Product List App (port 3002)
         <br />
         • Exposes: ProductList and ProductCard components
-        <br />
-        • Analytics: Product views and page loads tracked
       </div>
     </div>
   );

@@ -101,84 +101,20 @@ export const CartProvider = ({ children }) => {
   // Actions
   const addItem = (item) => {
     dispatch({ type: CART_ACTIONS.ADD_ITEM, payload: item });
-    
-    // Analytics: Track item added to cart
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Product Added', {
-        product_id: item.id,
-        product_name: item.name,
-        product_price: item.price,
-        quantity: item.quantity,
-        currency: 'USD',
-        value: item.price * item.quantity,
-        app: 'cart-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Product Added to Cart', item);
-    }
   };
 
   const removeItem = (itemId) => {
     const item = state.items.find(item => item.id === itemId);
-    
     dispatch({ type: CART_ACTIONS.REMOVE_ITEM, payload: itemId });
-    
-    // Analytics: Track item removed from cart
-    if (typeof window !== 'undefined' && window.analytics && item) {
-      window.analytics.track('Product Removed', {
-        product_id: item.id,
-        product_name: item.name,
-        product_price: item.price,
-        quantity: item.quantity,
-        currency: 'USD',
-        value: item.price * item.quantity,
-        app: 'cart-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Product Removed from Cart', item);
-    }
   };
 
   const updateQuantity = (itemId, quantity) => {
     const item = state.items.find(item => item.id === itemId);
     const oldQuantity = item ? item.quantity : 0;
-    
     dispatch({ type: CART_ACTIONS.UPDATE_QUANTITY, payload: { id: itemId, quantity } });
-    
-    // Analytics: Track quantity change
-    if (typeof window !== 'undefined' && window.analytics && item) {
-      window.analytics.track('Cart Updated', {
-        product_id: item.id,
-        product_name: item.name,
-        product_price: item.price,
-        old_quantity: oldQuantity,
-        new_quantity: quantity,
-        quantity_change: quantity - oldQuantity,
-        currency: 'USD',
-        app: 'cart-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Cart Updated', {
-        product: item.name,
-        oldQuantity,
-        newQuantity: quantity
-      });
-    }
   };
 
   const clearCart = () => {
-    // Analytics: Track cart cleared
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Cart Cleared', {
-        items_count: state.items.length,
-        total_value: totalPrice,
-        currency: 'USD',
-        app: 'cart-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Cart Cleared');
-    }
-    
     dispatch({ type: CART_ACTIONS.CLEAR_CART });
   };
 
