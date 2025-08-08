@@ -11,6 +11,7 @@ module.exports = {
         dts: false,
         exposes: {
           './Checkout': './components/Checkout.js',
+          './checkoutPage': './pages/index.js',
         },
         shared: {},
         extraOptions: {

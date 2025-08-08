@@ -12,6 +12,7 @@ module.exports = {
         exposes: {
           './Cart': './components/Cart.js',
           './CartProvider': './contexts/CartContext.js',
+          './cartPage': './pages/index.js',
         },
         shared: {},
         extraOptions: {

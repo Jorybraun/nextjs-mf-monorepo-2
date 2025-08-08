@@ -1,10 +1,12 @@
 // module federation remote app
 import React, { Suspense } from 'react';
 
-const RemoteComponent = React.lazy(() => import('remote/products'));
+const RemoteProductsPage = React.lazy(() => import('productList/productsPage'));
+
 const Products = () => (
     <Suspense fallback={<div>Loading...</div>}>
-        <RemoteComponent />
+        <RemoteProductsPage />
     </Suspense>
 );
+
 export default Products;

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ onNavigateToProduct }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const ProductList = ({ onNavigateToProduct, products = [] }) => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
 
@@ -17,25 +16,7 @@ const ProductList = ({ onNavigateToProduct }) => {
       });
       console.log('Analytics tracked: Product List page view');
     }
-
-    fetchProducts();
   }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('/api/products');
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
-      const data = await response.json();
-      setProducts(data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleViewProduct = (product) => {
     // Navigate to product detail page
