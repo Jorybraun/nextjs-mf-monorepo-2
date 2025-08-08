@@ -69,12 +69,12 @@ function cartReducer(state, action) {
 }
 
 // Cart provider component
-export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+export const CartProvider = ({ children, initialItems = [] }) => {
+  const [state, dispatch] = useReducer(cartReducer, { items: initialItems });
 
-  // Load cart from localStorage on mount
+  // Load cart from localStorage on mount (only if no initial items were provided)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && initialItems.length === 0) {
       const savedCart = localStorage.getItem('ecommerce-cart');
       if (savedCart) {
         try {
@@ -85,7 +85,7 @@ export const CartProvider = ({ children }) => {
         }
       }
     }
-  }, []);
+  }, [initialItems]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {

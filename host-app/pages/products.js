@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 
-const ProductsPage = React.lazy(() => import('productList/products'));
+const RemoteProductsPage = React.lazy(() => import('productList/productsPage'));
 
-export default function Products() {
-  return (
-    <Suspense fallback={<div>Loading products...</div>}>
-      <ProductsPage />
+const Products = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <RemoteProductsPage />
     </Suspense>
-  );
-}
+);
+
+export default Products;

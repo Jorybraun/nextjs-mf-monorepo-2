@@ -1,33 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ onNavigateToProduct }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const ProductList = ({ onNavigateToProduct, products = [] }) => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
-  const fetchProducts = async () => {
-    try {
-      // Use environment variable for API URL or fallback to localhost
-      const apiUrl = process.env.NEXT_PUBLIC_PRODUCT_LIST_API_URL || 'http://localhost:3002';
-      const response = await fetch(`${apiUrl}/api/products`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
-      const data = await response.json();
-      setProducts(data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    // Analytics: Track page view
+    if (typeof window !== 'undefined' && window.analytics) {
+      window.analytics.page('Product List', {
+        title: 'Product List Page',
+        path: '/products',
+        app: 'product-list-app',
+      });
+      console.log('Analytics tracked: Product List page view');
     }
-  };
+  }, []);
 
   const handleViewProduct = (product) => {
     // Navigate to product detail page

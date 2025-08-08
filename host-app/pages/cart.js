@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 
-const CartPage = React.lazy(() => import('cart/cart'));
+const RemoteCartPage = React.lazy(() => import('cart/cartPage'));
 
 export default function Cart() {
   return (
-    <Suspense fallback={<div>Loading cart...</div>}>
-      <CartPage />
+    <Suspense fallback={<div>Loading...</div>}>
+      <RemoteCartPage />
     </Suspense>
   );
 }

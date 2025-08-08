@@ -13,6 +13,7 @@ module.exports = {
           './products': './pages/products.js',
           './ProductList': './components/ProductList.js',
           './ProductCard': './components/ProductCard.js',
+          './productsPage': './pages/index.js',
         },
         shared: {},
         extraOptions: {

@@ -12,6 +12,7 @@ module.exports = {
         exposes: {
           './checkout': './pages/checkout.js',
           './Checkout': './components/Checkout.js',
+          './checkoutPage': './pages/index.js',
         },
         shared: {},
         extraOptions: {
