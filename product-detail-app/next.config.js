@@ -10,7 +10,7 @@ module.exports = {
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
-          './ProductDetail': './components/ProductDetail.js',
+          './ProductDetail': './components/ProductDetail.tsx',
         },
         shared: {},
         extraOptions: {

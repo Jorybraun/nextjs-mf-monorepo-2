@@ -110,8 +110,12 @@ export const useCartActions = () => {
   const dispatch = useContext(CartDispatchContext);
   if (!dispatch) throw new Error('useCartActions must be used within a CartProvider');
 
-  const addItem = (item) => dispatch({ type: CART_ACTIONS.ADD_ITEM, payload: item });
+  const addItem = (item, quantity = 1) => {
+    dispatch({ type: CART_ACTIONS.ADD_ITEM, payload: { item, quantity } });
+  }
+
   const removeItem = (itemId) => dispatch({ type: CART_ACTIONS.REMOVE_ITEM, payload: itemId });
+
   const updateQuantity = (itemId, quantity) =>
     dispatch({ type: CART_ACTIONS.UPDATE_QUANTITY, payload: { id: itemId, quantity } });
   const clearCart = () => dispatch({ type: CART_ACTIONS.CLEAR_CART });

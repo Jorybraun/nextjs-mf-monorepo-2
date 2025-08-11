@@ -9,7 +9,8 @@
     "product-list-app",
     "product-detail-app",
     "cart-app",
-    "checkout-app"
+    "checkout-app",
+    "shared"
   ],
   "scripts": {
     "dev": "npm run dev --workspaces",

@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import type { Product } from 'shared/types'
 
-const ProductDetail = ({ product, onAddToCart, onNavigateBack }) => {
+// TODO DEFINE PRODUCT INTERFACE
+interface ProductDetailProps {
+  product: Product;
+  onAddToCart: (product: Product, quantity: number) => void;
+  onNavigateBack?: () => void;
+}
+
+
+const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, onNavigateBack }) => {
   // const [product, setProduct] = useState(null);
   // const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,6 +40,7 @@ const ProductDetail = ({ product, onAddToCart, onNavigateBack }) => {
 
 
   const handleAddToCart = () => {
+
     // if (!product) return;
 
     // Analytics: Track add to cart
@@ -62,9 +72,7 @@ const ProductDetail = ({ product, onAddToCart, onNavigateBack }) => {
     //     quantity: quantity
     //   });
     // }
-
-    // Show feedback
-    alert(`Added ${quantity} x ${product.name} to cart!`);
+    onAddToCart(product, quantity);
   };
 
   const handleQuantityChange = (newQuantity) => {

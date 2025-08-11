@@ -1,10 +1,13 @@
 import { GetServerSidePropsContext } from "next"
 import dynamic from "next/dynamic";
+import { useCartActions } from 'cart/CartProvider';
 
-const ProductDetail = dynamic(() => import('productDetail/ProductDetail'), { ssr: true })
+const ProductDetail = dynamic(() => import('productDetail/ProductDetail'), { ssr: true });
 
 export default function Page ({ data }) {
-    return <ProductDetail product={data}  />
+    const { addItem } = useCartActions();
+    // Todo analytics hook
+    return <ProductDetail product={data} onAddToCart={addItem} />
 }
 
 export async function getServerSideProps (ctx: GetServerSidePropsContext ) {
