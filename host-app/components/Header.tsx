@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { useCartState } from 'cart/CartProvider';
 
-export const Header = () => {
+export const HeaderWithCartState = () => {
+  const { totalItems } = useCartState()
+  console.log(totalItems);
+  return <Header itemCount={totalItems}></Header>
+}
+export const Header = ({ itemCount = 0 }) => {
     return ( <nav style={{
           padding: '1rem',
           backgroundColor: '#f8f9fa',
@@ -64,7 +70,7 @@ export const Header = () => {
                   cursor: 'pointer'
                 }}
               >
-                Cart
+                Cart { itemCount }
               </Link>
             </div>
           </div>

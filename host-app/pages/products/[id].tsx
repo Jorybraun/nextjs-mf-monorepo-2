@@ -10,7 +10,7 @@ export default function Page ({ data }) {
     return <ProductDetail product={data} onAddToCart={addItem} />
 }
 
-export async function getServerSideProps (ctx: GetServerSidePropsContext ) {
+export async function getServerSideProps (ctx: GetServerSidePropsContext) {
     // need to get product data from ctx  
     try {
         const res = await fetch(`http://localhost:3003/api/products/${ctx.params.id}`)

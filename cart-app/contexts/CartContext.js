@@ -102,6 +102,7 @@ export const useCartState = () => {
   if (!state) throw new Error('useCartState must be used within a CartProvider');
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  console.log(totalItems)
   return { ...state, totalItems, totalPrice };
 };
 
@@ -111,6 +112,7 @@ export const useCartActions = () => {
   if (!dispatch) throw new Error('useCartActions must be used within a CartProvider');
 
   const addItem = (item, quantity = 1) => {
+    console.log(item, quantity);
     dispatch({ type: CART_ACTIONS.ADD_ITEM, payload: { item, quantity } });
   }
 
