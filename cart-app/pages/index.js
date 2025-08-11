@@ -20,7 +20,7 @@ export async function getServerSideProps(context) {
         name: 'Wireless Bluetooth Headphones',
         price: 99.99,
         quantity: 1,
-        image: 'https://via.placeholder.com/300x300/4A90E2/FFFFFF?text=Headphones'
+        image: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80'
       },
       {
         id: 2,

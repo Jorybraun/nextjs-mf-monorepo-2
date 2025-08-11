@@ -20,7 +20,6 @@ export async function getServerSideProps(context) {
     const res = await fetch('http://localhost:3002/api/products');
     console.log('API response status:', res.status);
     
-
     if (res.ok) {
         const products = await res.json();
         console.log('PPOOOOO', products)

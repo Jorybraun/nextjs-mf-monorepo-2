@@ -1,8 +1,6 @@
 // Use the same product data as product-list-app for consistency
 export default function handler(req, res) {
-  const { id } = req.query;
-  console.log('[API] /api/products/[id] called with id:', id);
-  
+  const { id } = req.query;  
   // Enhanced mock product data
   const products = [
     { 
@@ -10,7 +8,7 @@ export default function handler(req, res) {
       name: 'Wireless Bluetooth Headphones', 
       price: 99.99,
       description: 'High-quality wireless headphones with noise cancellation',
-      image: 'https://via.placeholder.com/300x300/4A90E2/FFFFFF?text=Headphones',
+      image: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
       category: 'Electronics',
       inStock: true,
       rating: 4.5,
@@ -35,7 +33,7 @@ export default function handler(req, res) {
       name: 'Smart Watch Series 5', 
       price: 299.99,
       description: 'Advanced fitness tracking and smart notifications',
-      image: 'https://via.placeholder.com/300x300/7ED321/FFFFFF?text=Smart+Watch',
+      image: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=600&q=80', // Smart Watch
       category: 'Electronics',
       inStock: true,
       rating: 4.8,
@@ -60,7 +58,7 @@ export default function handler(req, res) {
       name: 'Premium Coffee Beans', 
       price: 24.99,
       description: 'Artisan roasted coffee beans from sustainable farms',
-      image: 'https://via.placeholder.com/300x300/F5A623/FFFFFF?text=Coffee',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80', // Coffee
       category: 'Food & Beverages',
       inStock: true,
       rating: 4.2,
@@ -85,7 +83,7 @@ export default function handler(req, res) {
       name: 'Ergonomic Office Chair', 
       price: 449.99,
       description: 'Comfortable office chair with lumbar support',
-      image: 'https://via.placeholder.com/300x300/BD10E0/FFFFFF?text=Chair',
+      image: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=600&q=80', // Chair
       category: 'Furniture',
       inStock: false,
       rating: 4.6,
@@ -110,7 +108,7 @@ export default function handler(req, res) {
       name: 'Portable Power Bank', 
       price: 39.99,
       description: '20,000mAh high-capacity portable charger',
-      image: 'https://via.placeholder.com/300x300/50E3C2/FFFFFF?text=Power+Bank',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80', // Power Bank
       category: 'Electronics',
       inStock: true,
       rating: 4.3,
@@ -135,7 +133,7 @@ export default function handler(req, res) {
       name: 'Yoga Mat Pro', 
       price: 59.99,
       description: 'Professional-grade non-slip yoga mat',
-      image: 'https://via.placeholder.com/300x300/D0021B/FFFFFF?text=Yoga+Mat',
+      image: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=600&q=80', // Yoga Mat
       category: 'Sports & Fitness',
       inStock: true,
       rating: 4.7,

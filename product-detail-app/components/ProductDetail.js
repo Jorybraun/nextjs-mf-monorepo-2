@@ -1,83 +1,67 @@
 import React, { useState, useEffect } from 'react';
 
-const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+const ProductDetail = ({ product, onAddToCart, onNavigateBack }) => {
+  // const [product, setProduct] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
+  // const [selectedImage, setSelectedImage] = useState(0);
 
-  useEffect(() => {
-    if (productId) {
-      fetchProduct(productId);
-    }
-  }, [productId]);
+  // useEffect(() => {
+  //   if (productId) {
+  //     fetchProduct(productId);
+  //   }
+  // }, [productId]);
 
-  useEffect(() => {
-    // Analytics: Track page view
-    if (typeof window !== 'undefined' && window.analytics && product) {
-      window.analytics.page('Product Detail', {
-        title: `Product Detail - ${product.name}`,
-        path: `/product/${product.id}`,
-        product_id: product.id,
-        product_name: product.name,
-        product_category: product.category,
-        product_price: product.price,
-        app: 'product-detail-app',
-      });
-      console.log('Analytics tracked: Product Detail page view', product.name);
-    }
-  }, [product]);
+  // useEffect(() => {
+  //   // Analytics: Track page view
+  //   if (typeof window !== 'undefined' && window.analytics && product) {
+  //     window.analytics.page('Product Detail', {
+  //       title: `Product Detail - ${product.name}`,
+  //       path: `/product/${product.id}`,
+  //       product_id: product.id,
+  //       product_name: product.name,
+  //       product_category: product.category,
+  //       product_price: product.price,
+  //       app: 'product-detail-app',
+  //     });
+  //     console.log('Analytics tracked: Product Detail page view', product.name);
+  //   }
+  // }, [product]);
 
-  const fetchProduct = async (id) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/products/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch product');
-      }
-      const data = await response.json();
-      setProduct(data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching product:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAddToCart = () => {
-    if (!product) return;
+    // if (!product) return;
 
     // Analytics: Track add to cart
-    if (typeof window !== 'undefined' && window.analytics) {
-      window.analytics.track('Product Added', {
-        product_id: product.id,
-        product_name: product.name,
-        product_category: product.category,
-        product_price: product.price,
-        quantity: quantity,
-        currency: 'USD',
-        value: product.price * quantity,
-        app: 'product-detail-app',
-        timestamp: new Date().toISOString(),
-      });
-      console.log('Analytics tracked: Product Added to Cart', {
-        product: product.name,
-        quantity
-      });
-    }
+    // if (typeof window !== 'undefined' && window.analytics) {
+    //   window.analytics.track('Product Added', {
+    //     product_id: product.id,
+    //     product_name: product.name,
+    //     product_category: product.category,
+    //     product_price: product.price,
+    //     quantity: quantity,
+    //     currency: 'USD',
+    //     value: product.price * quantity,
+    //     app: 'product-detail-app',
+    //     timestamp: new Date().toISOString(),
+    //   });
+    //   console.log('Analytics tracked: Product Added to Cart', {
+    //     product: product.name,
+    //     quantity
+    //   });
+    // }
 
     // Call parent callback
-    if (onAddToCart) {
-      onAddToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: quantity
-      });
-    }
+    // if (onAddToCart) {
+    //   onAddToCart({
+    //     id: product.id,
+    //     name: product.name,
+    //     price: product.price,
+    //     image: product.image,
+    //     quantity: quantity
+    //   });
+    // }
 
     // Show feedback
     alert(`Added ${quantity} x ${product.name} to cart!`);
@@ -88,61 +72,6 @@ const ProductDetail = ({ productId, onAddToCart, onNavigateBack }) => {
       setQuantity(newQuantity);
     }
   };
-
-  if (loading) {
-    return (
-      <div style={{ 
-        padding: '2rem', 
-        textAlign: 'center',
-        fontFamily: 'Arial, sans-serif'
-      }}>
-        <h2>Loading product details...</h2>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ 
-        padding: '2rem', 
-        textAlign: 'center',
-        fontFamily: 'Arial, sans-serif',
-        color: '#dc3545'
-      }}>
-        <h2>Error loading product</h2>
-        <p>{error}</p>
-        <button 
-          onClick={() => fetchProduct(productId)}
-          style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginRight: '1rem'
-          }}
-        >
-          Retry
-        </button>
-        {onNavigateBack && (
-          <button 
-            onClick={onNavigateBack}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Back to Products
-          </button>
-        )}
-      </div>
-    );
-  }
 
   if (!product) {
     return (
