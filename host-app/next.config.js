@@ -16,9 +16,7 @@ const remotes = isServer => {
 const nextConfig = {
   webpack(config, options) {
     const { isServer } = options;
-     config.cache = false;
-  // ...existing code...
-    // Only enable Module Federation on client side to avoid SSR issues
+    
     config.plugins.push(
       new NextFederationPlugin({
         name: 'host',
@@ -26,22 +24,9 @@ const nextConfig = {
         remotes: remotes(isServer),
         dts: false,
         shared: {},
-        extraOptions: {
-          exposePages: true,
-        },
-        // shared: {
-        //   react: {
-        //     singleton: true,
-        //     requiredVersion: false,
-        //   },
-        //   'react-dom': {
-        //     singleton: true,
-        //     requiredVersion: false,
-        //   },
-        // },
+        extraOptions: {},
       })
     );
-
     return config;
   },
 };

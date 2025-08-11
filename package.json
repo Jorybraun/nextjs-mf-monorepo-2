@@ -26,7 +26,9 @@
     "build:product-list": "npm run build --workspace=product-list-app",
     "build:product-detail": "npm run build --workspace=product-detail-app",
     "build:cart": "npm run build --workspace=cart-app",
-    "build:checkout": "npm run build --workspace=checkout-app"
+    "build:checkout": "npm run build --workspace=checkout-app",
+    "clean:next": "rm -rf ./host-app/.next ./remote-app/.next ./product-list-app/.next ./product-detail-app/.next ./cart-app/.next ./checkout-app/.next",
+    "dev:all": "npm run clean:next & npm run dev:remote & npm run dev:product-list & npm run dev:product-detail & npm run dev:cart & npm run dev:checkout & npm run dev:host"
   },
   "keywords": [
     "nextjs",
@@ -38,6 +40,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "concurrently": "^9.2.0",
     "webpack": "^5.101.0"
   }
 }

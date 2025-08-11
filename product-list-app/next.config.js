@@ -3,16 +3,16 @@ const NextFederationPlugin = require('@module-federation/nextjs-mf');
 /** @type {import('next').NextConfig} */
 
 module.exports = {
-  webpack(config, options) {
+  webpack(config, { isServer }) {
     config.plugins.push(
       new NextFederationPlugin({
         name: 'productList',
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
-          './ProductList': './components/ProductList.js',
+          './ProductList': './components/ProductList.tsx',
           './ProductCard': './components/ProductCard.js',
-          './productsPage': './pages/index.js',
+          './ProductPage': './pages/products.js',
         },
         shared: {},
         extraOptions: {

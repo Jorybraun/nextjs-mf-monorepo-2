@@ -1,5 +1,9 @@
 export default function handler(req, res) {
   console.log('[API] /api/products called');
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
   // Enhanced mock product data for ecommerce demo
   const products = [
