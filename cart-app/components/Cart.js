@@ -22,6 +22,14 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
   const [enrichedItems, setEnrichedItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      removeItem(productId);
+    } else {
+      updateQuantity(productId, newQuantity);
+    }
+  };
+
   useEffect(() => {
     if (items && items.length > 0) {
       setLoading(true);
@@ -39,65 +47,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
     } else {
       setEnrichedItems([]);
     }
-  }, [items])
-
-
-  // useEffect(() => {
-    // Analytics: Track cart page view
-    // if (typeof window !== 'undefined' && window.analytics) {
-    //   window.analytics.page('Shopping Cart', {
-    //     title: 'Shopping Cart',
-    //     path: '/cart',
-    //     items_count: totalItems,
-    //     cart_value: totalPrice,
-    //     currency: 'USD',
-    //     app: 'cart-app',
-    //   });
-    //   console.log('Analytics tracked: Cart page view', {
-    //     items: totalItems,
-    //     value: totalPrice
-    //   });
-  //   }
-  // }, [totalItems, totalPrice]);
-
-  // const handleQuantityChange = (itemId, newQuantity) => {
-  //   if (newQuantity < 1) {
-  //     removeItem(itemId);
-  //   } else {
-  //     updateQuantity(itemId, newQuantity);
-  //   }
-  // };
-
-  // const handleProceedToCheckout = () => {
-  //   // Analytics: Track checkout initiated
-  //   if (typeof window !== 'undefined' && window.analytics) {
-  //     window.analytics.track('Checkout Started', {
-  //       order_id: `order_${Date.now()}`,
-  //       value: totalPrice,
-  //       currency: 'USD',
-  //       items_count: totalItems,
-  //       products: items.map(item => ({
-  //         product_id: item.id,
-  //         product_name: item.name,
-  //         product_price: item.price,
-  //         quantity: item.quantity
-  //       })),
-  //       app: 'cart-app',
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //     console.log('Analytics tracked: Checkout Started', {
-  //       items: totalItems,
-  //       value: totalPrice
-  //     });
-  //   }
-
-  //   if (onNavigateToCheckout) {
-  //     onNavigateToCheckout();
-  //   } else {
-  //     // Fallback navigation
-  //     window.location.href = '/checkout';
-  //   }
-  // };
+  }, [items]);
 
   if (enrichedItems.length === 0) {
     return (
@@ -186,7 +136,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
         {/* Cart Items */}
         <div>
           {enrichedItems.map(item => (
-            <div key={item.id} style={{
+            <div key={item.product_id} style={{
               display: 'flex',
               alignItems: 'center',
               padding: '1.5rem',
@@ -232,7 +182,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <button
-                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                    onClick={() => handleQuantityChange(item.product_id, item.quantity - 1)}
                     style={{
                       padding: '0.5rem',
                       backgroundColor: '#007bff',
@@ -256,7 +206,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                     {item.quantity}
                   </span>
                   <button
-                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                    onClick={() => handleQuantityChange(item.product_id, item.quantity + 1)}
                     style={{
                       padding: '0.5rem',
                       backgroundColor: '#007bff',
@@ -280,7 +230,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                 </div>
 
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.product_id)}
                   style={{
                     padding: '0.5rem',
                     backgroundColor: '#dc3545',
