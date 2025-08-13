@@ -3,9 +3,9 @@ import { useCartState } from 'cart/CartProvider';
 
 export const HeaderWithCartState = () => {
   const { totalItems } = useCartState()
-  console.log(totalItems);
   return <Header itemCount={totalItems}></Header>
 }
+
 export const Header = ({ itemCount = 0 }) => {
     return ( <nav style={{
           padding: '1rem',

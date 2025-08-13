@@ -1,11 +1,9 @@
-import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
-const RemoteCartPage = React.lazy(() => import('cart/cartPage'));
+const RemoteCartPage = dynamic(() => import('cart/Cart'), { ssr: true });
 
 export default function Cart() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <RemoteCartPage />
-    </Suspense>
+    <RemoteCartPage />
   );
 }

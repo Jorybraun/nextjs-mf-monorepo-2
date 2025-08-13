@@ -1,8 +1,46 @@
-import React, { useEffect } from 'react';
-import { useCart } from '../contexts/CartContext';
+import React, { useEffect, useState } from 'react';
+import { useCartActions, useCartState } from '../contexts/CartContext';
+
+const getProductData = async (items) => {
+    if (!items || items.length === 0) return [];
+    
+    const productPromises = items.map(item => 
+      fetch(`http://localhost:3002/api/products/${item.product_id}`)
+        .then(res => res.json())
+        .then(productData => ({
+          ...item,
+          product: productData
+        }))
+    );
+
+    return await Promise.all(productPromises);
+}
 
 const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
-  const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const { items, totalItems, totalPrice } = useCartState();
+  const { updateQuantity, clearCart, removeItem } = useCartActions();
+  const [enrichedItems, setEnrichedItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (items && items.length > 0) {
+      setLoading(true);
+      getProductData(items)
+        .then((enrichedData) => {
+          console.log('Enriched cart items:', enrichedData);
+          setEnrichedItems(enrichedData);
+        })
+        .catch((error) => {
+          console.error('Error fetching product data:', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setEnrichedItems([]);
+    }
+  }, [items])
+
 
   // useEffect(() => {
     // Analytics: Track cart page view
@@ -61,7 +99,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
   //   }
   // };
 
-  if (items.length === 0) {
+  if (enrichedItems.length === 0) {
     return (
       <div style={{ 
         padding: '2rem',
@@ -147,7 +185,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
       }}>
         {/* Cart Items */}
         <div>
-          {items.map(item => (
+          {enrichedItems.map(item => (
             <div key={item.id} style={{
               display: 'flex',
               alignItems: 'center',
@@ -159,8 +197,8 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
             }}>
               <img 
-                src={item.image} 
-                alt={item.name}
+                src={item.product.image} 
+                alt={item.product.name}
                 style={{
                   width: '80px',
                   height: '80px',
@@ -175,7 +213,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   margin: '0 0 0.5rem 0',
                   color: '#333'
                 }}>
-                  {item.name}
+                  {item.product.name}
                 </h3>
                 <p style={{ 
                   color: '#666',
@@ -183,7 +221,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   fontSize: '1.1rem',
                   fontWeight: 'bold'
                 }}>
-                  ${item.price}
+                  ${item.product.price}
                 </p>
               </div>
 
@@ -238,7 +276,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   fontWeight: 'bold',
                   color: '#2c5aa0'
                 }}>
-                  ${(item.price * item.quantity).toFixed(2)}
+                  ${(item.product.price * item.quantity).toFixed(2)}
                 </div>
 
                 <button
@@ -253,7 +291,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   }}
                   title="Remove item"
                 >
-                  ×
+                  x
                 </button>
               </div>
             </div>
@@ -355,7 +393,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             <span>${(totalPrice * 1.08).toFixed(2)}</span>
           </div>
 
-          <button
+          {/* <button
             onClick={handleProceedToCheckout}
             style={{
               width: '100%',
@@ -370,7 +408,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             }}
           >
             Proceed to Checkout
-          </button>
+          </button> */}
         </div>
       </div>
 
