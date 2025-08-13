@@ -6,10 +6,10 @@
   "workspaces": [
     "host-app",
     "remote-app",
-    "product-list-app",
-    "product-detail-app",
+    "product-app",
     "cart-app",
-    "checkout-app"
+    "checkout-app",
+    "shared"
   ],
   "scripts": {
     "dev": "npm run dev --workspaces",
@@ -17,17 +17,17 @@
     "start": "npm run start --workspaces",
     "dev:host": "npm run dev --workspace=host-app",
     "dev:remote": "npm run dev --workspace=remote-app",
-    "dev:product-list": "npm run dev --workspace=product-list-app",
-    "dev:product-detail": "npm run dev --workspace=product-detail-app",
+    "dev:product": "npm run dev --workspace=product-app",
     "dev:cart": "npm run dev --workspace=cart-app",
     "dev:checkout": "npm run dev --workspace=checkout-app",
     "build:host": "npm run build --workspace=host-app",
     "build:remote": "npm run build --workspace=remote-app",
-    "build:product-list": "npm run build --workspace=product-list-app",
-    "build:product-detail": "npm run build --workspace=product-detail-app",
+    "build:product": "npm run build --workspace=product-app",
     "build:cart": "npm run build --workspace=cart-app",
     "build:checkout": "npm run build --workspace=checkout-app",
-    "dev:all": "concurrently \"npm run dev:host\" \"npm run dev:remote\" \"npm run dev:product-list\" \"npm run dev:product-detail\" \"npm run dev:cart\" \"npm run dev:checkout\""
+    "clean:next": "rm -rf ./host-app/.next ./remote-app/.next ./product-app/.next ./cart-app/.next ./checkout-app/.next",
+    "clean": "rm -rf ./host-app/.next ./remote-app/.next ./product-app/.next ./cart-app/.next ./checkout-app/.next ./host-app/node_modules ./remote-app/node_modules ./product-app/node_modules ./cart-app/node_modules ./checkout-app/node_modules ./product-app/products.db ./cart-app/cart.db ./.turbo node_modules",
+    "dev:all": "npm run clean:next & npm run dev:remote & npm run dev:product & npm run dev:cart & npm run dev:checkout & npm run dev:host"
   },
   "keywords": [
     "nextjs",
@@ -36,9 +36,18 @@
     "segment",
     "analytics"
   ],
+  "packageManager": "npm@10.5.0",
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/uuid": "^9.0.0",
+    "concurrently": "^9.2.0",
+    "turbo": "^2.5.5",
     "webpack": "^5.101.0"
+  },
+  "dependencies": {
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
   }
 }

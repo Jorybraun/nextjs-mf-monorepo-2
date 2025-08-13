@@ -1,18 +1,22 @@
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 
 /** @type {import('next').NextConfig} */
-
 module.exports = {
   webpack(config, options) {
+    // Externalize sqlite3 for server-side
+    if (options.isServer) {
+      config.externals.push('sqlite3');
+    }
+    
     config.plugins.push(
       new NextFederationPlugin({
-        name: 'checkout',
+        name: 'product',
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
-          './checkout': './pages/checkout.js',
-          './Checkout': './components/Checkout.js',
-          './checkoutPage': './pages/index.js',
+          './ProductList': './components/ProductList.tsx',
+          './ProductDetail': './components/ProductDetail.tsx',
+          './ProductCard': './components/ProductCard.js',
         },
         shared: {},
         extraOptions: {

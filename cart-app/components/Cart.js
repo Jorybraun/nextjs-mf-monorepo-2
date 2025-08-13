@@ -1,31 +1,105 @@
-import React, { useEffect } from 'react';
-import { useCart } from '../contexts/CartContext';
+import React, { useEffect, useState } from 'react';
+import { useCartActions, useCartState } from '../contexts/CartContext';
+
+const getProductData = async (items) => {
+    if (!items || items.length === 0) return [];
+    
+    const productPromises = items.map(item => 
+      fetch(`http://localhost:3002/api/products/${item.product_id}`)
+        .then(res => res.json())
+        .then(productData => ({
+          ...item,
+          product: productData
+        }))
+    );
+
+    return await Promise.all(productPromises);
+}
 
 const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
-  const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const { items, totalItems, totalPrice } = useCartState();
+  const { updateQuantity, clearCart, removeItem } = useCartActions();
+  const [enrichedItems, setEnrichedItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Cart page view - analytics removed
-  }, [totalItems, totalPrice]);
-
-  const handleQuantityChange = (itemId, newQuantity) => {
-    if (newQuantity < 1) {
-      removeItem(itemId);
+    if (items && items.length > 0) {
+      setLoading(true);
+      getProductData(items)
+        .then((enrichedData) => {
+          console.log('Enriched cart items:', enrichedData);
+          setEnrichedItems(enrichedData);
+        })
+        .catch((error) => {
+          console.error('Error fetching product data:', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } else {
-      updateQuantity(itemId, newQuantity);
+      setEnrichedItems([]);
     }
-  };
+  }, [items])
 
-  const handleProceedToCheckout = () => {
-    if (onNavigateToCheckout) {
-      onNavigateToCheckout();
-    } else {
-      // Fallback navigation
-      window.location.href = '/checkout';
-    }
-  };
 
-  if (items.length === 0) {
+  // useEffect(() => {
+    // Analytics: Track cart page view
+    // if (typeof window !== 'undefined' && window.analytics) {
+    //   window.analytics.page('Shopping Cart', {
+    //     title: 'Shopping Cart',
+    //     path: '/cart',
+    //     items_count: totalItems,
+    //     cart_value: totalPrice,
+    //     currency: 'USD',
+    //     app: 'cart-app',
+    //   });
+    //   console.log('Analytics tracked: Cart page view', {
+    //     items: totalItems,
+    //     value: totalPrice
+    //   });
+  //   }
+  // }, [totalItems, totalPrice]);
+
+  // const handleQuantityChange = (itemId, newQuantity) => {
+  //   if (newQuantity < 1) {
+  //     removeItem(itemId);
+  //   } else {
+  //     updateQuantity(itemId, newQuantity);
+  //   }
+  // };
+
+  // const handleProceedToCheckout = () => {
+  //   // Analytics: Track checkout initiated
+  //   if (typeof window !== 'undefined' && window.analytics) {
+  //     window.analytics.track('Checkout Started', {
+  //       order_id: `order_${Date.now()}`,
+  //       value: totalPrice,
+  //       currency: 'USD',
+  //       items_count: totalItems,
+  //       products: items.map(item => ({
+  //         product_id: item.id,
+  //         product_name: item.name,
+  //         product_price: item.price,
+  //         quantity: item.quantity
+  //       })),
+  //       app: 'cart-app',
+  //       timestamp: new Date().toISOString(),
+  //     });
+  //     console.log('Analytics tracked: Checkout Started', {
+  //       items: totalItems,
+  //       value: totalPrice
+  //     });
+  //   }
+
+  //   if (onNavigateToCheckout) {
+  //     onNavigateToCheckout();
+  //   } else {
+  //     // Fallback navigation
+  //     window.location.href = '/checkout';
+  //   }
+  // };
+
+  if (enrichedItems.length === 0) {
     return (
       <div style={{ 
         padding: '2rem',
@@ -111,7 +185,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
       }}>
         {/* Cart Items */}
         <div>
-          {items.map(item => (
+          {enrichedItems.map(item => (
             <div key={item.id} style={{
               display: 'flex',
               alignItems: 'center',
@@ -123,8 +197,8 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
             }}>
               <img 
-                src={item.image} 
-                alt={item.name}
+                src={item.product.image} 
+                alt={item.product.name}
                 style={{
                   width: '80px',
                   height: '80px',
@@ -139,7 +213,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   margin: '0 0 0.5rem 0',
                   color: '#333'
                 }}>
-                  {item.name}
+                  {item.product.name}
                 </h3>
                 <p style={{ 
                   color: '#666',
@@ -147,7 +221,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   fontSize: '1.1rem',
                   fontWeight: 'bold'
                 }}>
-                  ${item.price}
+                  ${item.product.price}
                 </p>
               </div>
 
@@ -202,7 +276,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   fontWeight: 'bold',
                   color: '#2c5aa0'
                 }}>
-                  ${(item.price * item.quantity).toFixed(2)}
+                  ${(item.product.price * item.quantity).toFixed(2)}
                 </div>
 
                 <button
@@ -217,7 +291,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
                   }}
                   title="Remove item"
                 >
-                  ×
+                  x
                 </button>
               </div>
             </div>
@@ -319,7 +393,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             <span>${(totalPrice * 1.08).toFixed(2)}</span>
           </div>
 
-          <button
+          {/* <button
             onClick={handleProceedToCheckout}
             style={{
               width: '100%',
@@ -334,7 +408,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             }}
           >
             Proceed to Checkout
-          </button>
+          </button> */}
         </div>
       </div>
 
