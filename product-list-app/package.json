@@ -1,12 +1,12 @@
 {
-  "name": "cart-app",
+  "name": "product-list-app",
   "version": "1.0.0",
-  "description": "Shopping Cart microfrontend",
+  "description": "Product List microfrontend",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next && NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3004",
+    "dev": "rm -rf .next && NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3002",
     "build": "NEXT_PRIVATE_LOCAL_WEBPACK=true next build",
-    "start": "next start -p 3004",
+    "start": "next start -p 3002",
     "lint": "next lint"
   },
   "dependencies": {
@@ -17,8 +17,5 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "5.101.0"
-  },
-  "devDependencies": {
-    "@types/react": "19.1.10"
   }
 }

@@ -1,24 +1,21 @@
 {
-  "name": "cart-app",
+  "name": "product-detail-app",
   "version": "1.0.0",
-  "description": "Shopping Cart microfrontend",
+  "description": "Product Detail microfrontend",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next && NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3004",
+    "dev": "rm -rf .next && NEXT_PRIVATE_LOCAL_WEBPACK=true next dev -p 3003",
     "build": "NEXT_PRIVATE_LOCAL_WEBPACK=true next build",
-    "start": "next start -p 3004",
+    "start": "next start -p 3003",
     "lint": "next lint"
   },
   "dependencies": {
   "shared": "*",
     "@module-federation/nextjs-mf": "8.8.34",
     "lodash": "4.17.21",
-  "next": "^13.4.19",
+    "next": "^13.4.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "5.101.0"
-  },
-  "devDependencies": {
-    "@types/react": "19.1.10"
   }
 }

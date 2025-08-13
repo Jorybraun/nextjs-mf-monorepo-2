@@ -26,6 +26,7 @@
     "build:cart": "npm run build --workspace=cart-app",
     "build:checkout": "npm run build --workspace=checkout-app",
     "clean:next": "rm -rf ./host-app/.next ./remote-app/.next ./product-app/.next ./cart-app/.next ./checkout-app/.next",
+    "clean": "rm -rf ./host-app/.next ./remote-app/.next ./product-app/.next ./cart-app/.next ./checkout-app/.next ./host-app/node_modules ./remote-app/node_modules ./product-app/node_modules ./cart-app/node_modules ./checkout-app/node_modules ./product-app/products.db ./cart-app/cart.db ./.turbo node_modules",
     "dev:all": "npm run clean:next & npm run dev:remote & npm run dev:product & npm run dev:cart & npm run dev:checkout & npm run dev:host"
   },
   "keywords": [
