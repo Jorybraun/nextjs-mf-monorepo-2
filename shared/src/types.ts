@@ -14,11 +14,11 @@ export interface Product {
 
 // Cart types
 export interface CartItem {
-  id: number;
   session_id: string;
   product_id: number;
   quantity: number;
-  created_at: string;
+  price?: number; // Stored price snapshot
+  created_at?: string;
   product?: Product; // Optional populated product data
 }
 

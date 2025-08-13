@@ -14,9 +14,6 @@ interface CartAction {
 
 // Actions
 const CART_ACTIONS = {
-  ADD_ITEM: "ADD_ITEM",
-  REMOVE_ITEM: "REMOVE_ITEM",
-  UPDATE_QUANTITY: "UPDATE_QUANTITY",
   CLEAR_CART: "CLEAR_CART",
   LOAD_CART: "LOAD_CART",
 };
@@ -24,58 +21,15 @@ const CART_ACTIONS = {
 // Reducer
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
-    case CART_ACTIONS.ADD_ITEM: {
-      const existingItem = state.items.find(
-        (item) => item.product_id === action.payload.item.id
-      );
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.product_id === action.payload.item.id
-              ? { ...item, quantity: item.quantity + action.payload.quantity }
-              : item
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          items: [...state.items, {
-            id: Date.now(), // temporary ID
-            session_id: '', // will be set by backend
-            product_id: action.payload.item.id,
-            quantity: action.payload.quantity,
-            created_at: new Date().toISOString(),
-            product: action.payload.item
-          }],
-        };
-      }
-    }
-    case CART_ACTIONS.REMOVE_ITEM:
+    case CART_ACTIONS.LOAD_CART:
       return {
         ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
-      };
-    case CART_ACTIONS.UPDATE_QUANTITY:
-      return {
-        ...state,
-        items: state.items
-          .map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: action.payload.quantity }
-              : item
-          )
-          .filter((item) => item.quantity > 0),
+        items: action.payload || [],
       };
     case CART_ACTIONS.CLEAR_CART:
       return {
         ...state,
         items: [],
-      };
-    case CART_ACTIONS.LOAD_CART:
-      return {
-        ...state,
-        items: action.payload || [],
       };
     default:
       return state;
@@ -180,16 +134,48 @@ const persistItemToCart = async (body) => {
   }
 };
 
-const removeItem = async (id) => {
+const updateItemQuantity = async (productId, quantity) => {
   try {
     const sessionId = getSessionId();
+    console.log(`Updating quantity for product ${productId} to ${quantity}`);
+    
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (sessionId) {
+      headers['X-Session-ID'] = sessionId;
+    }
+
+    const res = await fetch(`http://localhost:3004/api/cart/${productId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ quantity }),
+      headers
+    });
+
+    if (!res.ok) {
+      throw new Error("Error updating item quantity");
+    }
+    
+    console.log(`Successfully updated quantity for product ${productId}`);
+  } catch (err) {
+    console.error("Error updating quantity:", err);
+    throw err;
+  }
+};
+
+const removeItemFromCart = async (productId) => {
+  try {
+    const sessionId = getSessionId();
+    console.log(`Removing product ${productId} from cart`);
+    
     const headers = {};
     
     if (sessionId) {
       headers['X-Session-ID'] = sessionId;
     }
 
-    const res = await fetch(`http://localhost:3004/api/cart/${id}`, {
+    const res = await fetch(`http://localhost:3004/api/cart/${productId}`, {
       method: "DELETE",
       headers
     });
@@ -197,7 +183,39 @@ const removeItem = async (id) => {
     if (!res.ok) {
       throw new Error("Error removing cart item");
     }
-  } catch (err) {}
+    
+    console.log(`Successfully removed product ${productId} from cart`);
+  } catch (err) {
+    console.error("Error removing item:", err);
+    throw err;
+  }
+};
+
+const clearCartOnServer = async () => {
+  try {
+    const sessionId = getSessionId();
+    console.log('Clearing entire cart');
+    
+    const headers = {};
+    
+    if (sessionId) {
+      headers['X-Session-ID'] = sessionId;
+    }
+
+    const res = await fetch("http://localhost:3004/api/cart", {
+      method: "DELETE",
+      headers
+    });
+
+    if (!res.ok) {
+      throw new Error("Error clearing cart");
+    }
+    
+    console.log('Successfully cleared cart');
+  } catch (err) {
+    console.error("Error clearing cart:", err);
+    throw err;
+  }
 };
 
 // Provider
@@ -233,7 +251,7 @@ export const useCartState = () => {
     throw new Error("useCartState must be used within a CartProvider");
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = state.items.reduce(
-    (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+    (sum, item) => sum + (item.price || item.product?.price || 0) * item.quantity,
     0
   );
   return { ...state, totalItems, totalPrice };
@@ -245,26 +263,59 @@ export const useCartActions = () => {
   if (!dispatch)
     throw new Error("useCartActions must be used within a CartProvider");
 
-  const addItem = async (item: Product, quantity = 1) => {
+  const loadCart = async () => {
     try {
-      const data = await persistItemToCart({ product_id: item.id, quantity });
-      if (data) {
-        dispatch({ type: CART_ACTIONS.ADD_ITEM, payload: { item, quantity } });
-      }
+      const data = await fetchItems((items) => items);
+      dispatch({ type: CART_ACTIONS.LOAD_CART, payload: data });
     } catch (err) {
-      // dispatch error
+      console.error("Error loading cart:", err);
     }
   };
 
-  const removeItem = (itemId: number) =>
-    dispatch({ type: CART_ACTIONS.REMOVE_ITEM, payload: itemId });
+  const addItem = async (item: Product, quantity = 1) => {
+    try {
+      // Include the price from the product data
+      await persistItemToCart({ 
+        product_id: item.id, 
+        quantity,
+        price: item.price 
+      });
+      // After successful add, reload cart from server
+      await loadCart();
+    } catch (err) {
+      console.error("Error adding item:", err);
+    }
+  };
 
-  const updateQuantity = (itemId: number, quantity: number) =>
-    dispatch({
-      type: CART_ACTIONS.UPDATE_QUANTITY,
-      payload: { id: itemId, quantity },
-    });
-  const clearCart = () => dispatch({ type: CART_ACTIONS.CLEAR_CART });
+  const removeItem = async (productId: number) => {
+    try {
+      await removeItemFromCart(productId);
+      // After successful removal, reload cart from server
+      await loadCart();
+    } catch (err) {
+      console.error("Error removing item:", err);
+    }
+  };
+
+  const updateQuantity = async (productId: number, quantity: number) => {
+    try {
+      await updateItemQuantity(productId, quantity);
+      // After successful update, reload cart from server
+      await loadCart();
+    } catch (err) {
+      console.error("Error updating quantity:", err);
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      await clearCartOnServer();
+      // After successful clear, set local state to empty
+      dispatch({ type: CART_ACTIONS.CLEAR_CART });
+    } catch (err) {
+      console.error("Error clearing cart:", err);
+    }
+  };
 
   return { addItem, removeItem, updateQuantity, clearCart };
 };
