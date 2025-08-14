@@ -69,14 +69,16 @@ async function handler(req: SessionApiRequest, res: NextApiResponse) {
 
       const result = await db.run(
         `
-        INSERT INTO cart_items (session_id, product_id, quantity)
-        VALUES (?, ?, ?)
+        INSERT INTO cart_items (session_id, product_id, quantity, price)
+        VALUES (?, ?, ?, ?)
         ON CONFLICT(session_id, product_id) 
-        DO UPDATE SET quantity = quantity + ?`,
+        DO UPDATE SET quantity = quantity + ?, price = ?`,
         req.sessionId,
         item.product_id,
         item.quantity,
-        item.quantity
+        item.price || 0,
+        item.quantity,
+        item.price || 0
       );
 
       console.log("INSERT result:", result);
@@ -91,14 +93,19 @@ async function handler(req: SessionApiRequest, res: NextApiResponse) {
     }
 
     if (req.method === "DELETE") {
-      // Clean up broken data (session_id = undefined/null)
+      // Clear entire cart for this session
+      console.log(`Clearing entire cart for session: ${req.sessionId}`);
+      
       const result = await db.run(
-        "DELETE FROM cart_items WHERE session_id IS NULL OR session_id = 'undefined' OR product_id IS NULL"
+        "DELETE FROM cart_items WHERE session_id = ?",
+        req.sessionId
       );
-      console.log("Cleaned up broken data:", result);
-      return res
-        .status(200)
-        .json({ message: "Cleaned up broken data", changes: result.changes });
+      
+      console.log(`Cleared ${result.changes} item(s) from cart`);
+      return res.status(200).json({ 
+        message: "Cart cleared successfully", 
+        changes: result.changes 
+      });
     }
   } catch (err) {
     console.error("Error adding to cart:", err);

@@ -28,8 +28,17 @@ export const openCartDB = async () => {
       session_id TEXT,
       product_id INTEGER,
       quantity INTEGER,
+      price REAL,
       PRIMARY KEY (session_id, product_id)
     )
   `);
+  
+  // Add price column if it doesn't exist (for existing databases)
+  try {
+    await db.exec(`ALTER TABLE cart_items ADD COLUMN price REAL`);
+  } catch (err) {
+    // Column already exists, ignore error
+  }
+  
   return db;
 };
