@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useCartState } from 'cart/CartProvider';
 
-const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateBack }) => {
+const Checkout = ({ onOrderComplete, onNavigateBack }) => {
   const [step, setStep] = useState(1); // 1: Customer Info, 2: Review, 3: Complete
   const [customerInfo, setCustomerInfo] = useState({
     firstName: '',
@@ -18,6 +19,8 @@ const Checkout = ({ cartItems = [], totalPrice = 0, onOrderComplete, onNavigateB
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const { totalPrice, items: cartItems } = useCartState()
+
 
   useEffect(() => {
     // Checkout page tracking - analytics removed

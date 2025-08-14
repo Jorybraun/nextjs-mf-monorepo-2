@@ -3,16 +3,17 @@ const NextFederationPlugin = require('@module-federation/nextjs-mf');
 /** @type {import('next').NextConfig} */
 
 module.exports = {
-  webpack(config, options) {
+  webpack(config, { isServer }) {
     config.plugins.push(
       new NextFederationPlugin({
         name: 'checkout',
         filename: 'static/chunks/remoteEntry.js',
         dts: false,
         exposes: {
-          './checkout': './pages/checkout.js',
           './Checkout': './components/Checkout.js',
-          './checkoutPage': './pages/index.js',
+        },
+        remotes: {
+          'cart': `cart@http://localhost:3004/_next/static/${isServer ? 'ssr' : 'chunks'}/chunks/remoteEntry.js`
         },
         shared: {},
         extraOptions: {

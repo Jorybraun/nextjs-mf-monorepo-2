@@ -26,31 +26,42 @@ export async function getServerSideProps(context) {
   try {
     // Fetch cart data for checkout on the server side
     // In a real app, this would get the current user's cart from database
-    const cartItems = [
-      {
-        id: 1,
-        name: 'Wireless Bluetooth Headphones',
-        price: 99.99,
-        quantity: 1,
-        image: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 2,
-        name: 'Smart Watch Series 5',
-        price: 299.99,
-        quantity: 1,
-        image: 'https://via.placeholder.com/300x300/7ED321/FFFFFF?text=Smart+Watch'
+
+    const res = await fetch('http://localhost:3003/api/cart')
+
+
+    if (res.ok) {
+      const data = await res.json();
+
+      return {
+        props: {
+          cartItems,
+          totalPrice
+        }
       }
-    ];
+    }
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    return {
-      props: {
-        cartItems,
-        totalPrice,
-      },
-    };
+
+    // const cartItems = [
+    //   {
+    //     id: 1,
+    //     name: 'Wireless Bluetooth Headphones',
+    //     price: 99.99,
+    //     quantity: 1,
+    //     image: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80'
+    //   },
+    //   {
+    //     id: 2,
+    //     name: 'Smart Watch Series 5',
+    //     price: 299.99,
+    //     quantity: 1,
+    //     image: 'https://via.placeholder.com/300x300/7ED321/FFFFFF?text=Smart+Watch'
+    //   }
+    // ];
+
+    // const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
   } catch (error) {
     console.error('Error fetching checkout data:', error);
     return {

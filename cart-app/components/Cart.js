@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useCartActions, useCartState } from '../contexts/CartContext';
 
 const getProductData = async (items) => {
@@ -343,8 +344,8 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             <span>${(totalPrice * 1.08).toFixed(2)}</span>
           </div>
 
-          {/* <button
-            onClick={handleProceedToCheckout}
+          <Link
+            href='/checkout'
             style={{
               width: '100%',
               padding: '1rem',
@@ -358,7 +359,7 @@ const Cart = ({ onNavigateToCheckout, onNavigateToProducts }) => {
             }}
           >
             Proceed to Checkout
-          </button> */}
+          </Link> 
         </div>
       </div>
 

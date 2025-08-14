@@ -1,11 +1,10 @@
 import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
-const RemoteCheckoutPage = React.lazy(() => import('checkout/checkoutPage'));
+const RemoteCheckoutPage = dynamic(() => import('checkout/Checkout'), { ssr: true });
 
-export default function Checkout() {
+export default function Checkout({ totalPrice }) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <RemoteCheckoutPage />
-    </Suspense>
+      <RemoteCheckoutPage totalPrice={totalPrice} />
   );
 }
